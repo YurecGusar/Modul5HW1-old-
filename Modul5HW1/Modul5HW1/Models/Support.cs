@@ -4,13 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Modul5HW1
+namespace Modul5HW1.Models
 {
-    public class Starter
+    public class Support
     {
-        public void Run()
-        {
-            Console.WriteLine("develop");
-        }
+        public string Url { get; set; }
+        public string Text { get; set; }
     }
 }

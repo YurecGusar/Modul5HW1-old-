@@ -40,7 +40,7 @@ namespace Modul5HW1.Services
             var result = JsonConvert.DeserializeObject<T>(data);
             return result;
         }
-
+            
         private async Task<string> GetDataAsync(HttpMethod httpMethod, Uri uriString, string content = null)
         {
             var message = new HttpRequestMessage();

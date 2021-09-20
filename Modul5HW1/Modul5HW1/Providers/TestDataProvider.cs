@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Modul5HW1.Providers.Abstractions;
 using Newtonsoft.Json;
 
 namespace Modul5HW1.Providers
 {
-    public class TestDataProvider
+    public class TestDataProvider : ITestDataProvider
     {
         public TestDataProvider()
         {
@@ -16,6 +17,10 @@ namespace Modul5HW1.Providers
 
         public string ObjCreateUserJson { get; set; }
         public string ObjUpdateUserJson { get; set; }
+        public string ObjRegUserHavePassJson { get; set; }
+        public string ObjRegUserDontHavePassJson { get; set; }
+        public string ObjLogUserHavePassJson { get; set; }
+        public string ObjLogUserDontHavePassJson { get; set; }
 
         private void SetData()
         {
@@ -33,24 +38,30 @@ namespace Modul5HW1.Providers
                     job = "zion resident"
                 });
 
-            var serObj3 = JsonConvert.SerializeObject(
+            ObjRegUserHavePassJson = JsonConvert.SerializeObject(
                 new
                 {
                     email = "eve.holt@reqres.in",
                     password = "pistol"
                 });
 
-            var serObj4 = JsonConvert.SerializeObject(
+            ObjRegUserDontHavePassJson = JsonConvert.SerializeObject(
                  new
                  {
                      email = "eve.holt@reqres.in",
                  });
 
-            var serObj5 = JsonConvert.SerializeObject(
+            ObjLogUserHavePassJson = JsonConvert.SerializeObject(
                 new
                 {
                     email = "eve.holt@reqres.in",
                     password = "cityslicka"
+                });
+
+            ObjLogUserDontHavePassJson = JsonConvert.SerializeObject(
+                new
+                {
+                    email = "eve.holt@reqres.in"
                 });
         }
     }

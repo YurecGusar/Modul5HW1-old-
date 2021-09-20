@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Newtonsoft.Json;
-
-namespace Modul5HW1.Models
+﻿namespace Modul5HW1.Models
 {
     public class User
     {

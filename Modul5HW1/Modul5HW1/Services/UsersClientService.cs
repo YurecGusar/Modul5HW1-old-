@@ -1,63 +1,82 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Modul5HW1.Models;
 using Modul5HW1.Models.Items;
-using Newtonsoft.Json;
+using Modul5HW1.Services.Abstractions;
 
 namespace Modul5HW1.Services
 {
-    public class UsersClientService
+    public class UsersClientService : IUsersClientService
     {
-        private HttpClient _client = new HttpClient();
+        private IMyHttpMethodsService _myHttp;
 
-        public async Task<T> MyGetAsync<T>(string url)
+        public UsersClientService(IMyHttpMethodsService myHttp)
         {
-            var method = HttpMethod.Get;
-            var uri = new Uri(url);
-            var data = await GetDataAsync(method, uri);
-            var result = JsonConvert.DeserializeObject<T>(data);
+            _myHttp = myHttp;
+        }
+
+        public async Task<ListItem<User>> GetUsersOnPageAsync(int page)
+        {
+            var result = await _myHttp.MyGetAsync<ListItem<User>>(
+                $"https://reqres.in/api/users?page={page}");
             return result;
         }
 
-        public async Task<T> MyPostAsync<T>(string url, string content)
+        public async Task<SingleItem<User>> GetUserAsynk(int id)
         {
-            var method = HttpMethod.Post;
-            var uri = new Uri(url);
-            var data = await GetDataAsync(method, uri, content);
-            var result = JsonConvert.DeserializeObject<T>(data);
+            var result = await _myHttp.MyGetAsync<SingleItem<User>>(
+                $"https://reqres.in/api/users/{id}");
             return result;
         }
 
-        public async Task<T> MyPutAsync<T>(string url, string content)
+        public async Task<ListItem<Resource>> GeUncnownResourceAsync()
         {
-            var method = HttpMethod.Put;
-            var uri = new Uri(url);
-            var data = await GetDataAsync(method, uri, content);
-            var result = JsonConvert.DeserializeObject<T>(data);
+            var result = await _myHttp.MyGetAsync<ListItem<Resource>>(
+                "https://reqres.in/api/unknown");
             return result;
         }
-            
-        private async Task<string> GetDataAsync(HttpMethod httpMethod, Uri uriString, string content = null)
+
+        public async Task<SingleItem<Resource>> GetResourceAsync(int id)
         {
-            var message = new HttpRequestMessage();
+            var result = await _myHttp.MyGetAsync<SingleItem<Resource>>(
+                $"https://reqres.in/api/unknown/{id}");
+            return result;
+        }
 
-            message.Method = httpMethod;
-            message.RequestUri = uriString;
+        public async Task CreateUserAsync(string jsonUser)
+        {
+            await _myHttp.MyPostAsync<SingleItem<User>>("https://reqres.in/api/users", jsonUser);
+        }
 
-            if (!string.IsNullOrEmpty(content))
-            {
-                message.Content = new StringContent(content);
-            }
+        public async Task UpdatePutUserAsync(int id, string content)
+        {
+            await _myHttp.MyPutAsync<UserCreateInfo>($"https://reqres.in/api/users/{id}", content);
+        }
 
-            var response = await _client.SendAsync(message);
+        public async Task UpdatePathUserAsync(int id, string content)
+        {
+            await _myHttp.MyPathAsync<UserCreateInfo>($"https://reqres.in/api/users/{id}", content);
+        }
 
-            var data = await response.Content.ReadAsStringAsync();
+        public async Task DeleteUserAsync(int id)
+        {
+            await _myHttp.DeleteAsync(id);
+        }
 
-            return data;
+        public async Task RegisterUserAsync(string content)
+        {
+            await _myHttp.MyPostAsync<Register>("https://reqres.in/api/register", content);
+        }
+
+        public async Task LoginUserAsync(string content)
+        {
+            await _myHttp.MyPostAsync<Register>("https://reqres.in/api/login", content);
+        }
+
+        public async Task<ListItem<User>> GetUsersByDelay(int delay)
+        {
+            var result = await _myHttp.MyGetAsync<ListItem<User>>(
+                $"https://reqres.in/api/users?delay={delay}");
+            return result;
         }
     }
 }
